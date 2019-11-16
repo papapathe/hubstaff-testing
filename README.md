@@ -1,24 +1,23 @@
-# README
+# Webhooks
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The most simple project management tool in the world for which we're going to develop
+a webhook delivery system.
 
-Things you may want to cover:
+It doesn't even have authorization 😱.
 
-* Ruby version
+## Installation
 
-* System dependencies
+```bash
+bundle install
+bundle exec rails db:drop db:setup
+```
 
-* Configuration
+Let's make sure everything is ready.
 
-* Database creation
+```bash
+bundle exec rspec
+```
 
-* Database initialization
+You're good to go. Happy coding 🤘!
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+![](happy-coding.gif)
