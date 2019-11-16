@@ -12,9 +12,6 @@
 
 ActiveRecord::Schema.define(version: 2019_11_05_093444) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "organizations", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
@@ -23,7 +20,7 @@ ActiveRecord::Schema.define(version: 2019_11_05_093444) do
 
   create_table "projects", force: :cascade do |t|
     t.string "name"
-    t.bigint "organization_id"
+    t.integer "organization_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["organization_id"], name: "index_projects_on_organization_id"
@@ -32,7 +29,7 @@ ActiveRecord::Schema.define(version: 2019_11_05_093444) do
   create_table "tasks", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.bigint "project_id"
+    t.integer "project_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["project_id"], name: "index_tasks_on_project_id"
