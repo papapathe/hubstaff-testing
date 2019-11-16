@@ -4,7 +4,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    DatabaseCleaner.strategy = :transaction, {except: %w[ar_internal_metadata]}
+    DatabaseCleaner.strategy = :transaction
   end
 
   config.around(:each) do |example|
