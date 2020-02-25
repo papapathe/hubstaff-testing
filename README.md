@@ -5,7 +5,17 @@ a webhook delivery system.
 
 It doesn't even have authorization 😱.
 
+## Dependencies
+
+* ruby-2.6.3
+* postgres-9.6+
+
 ## Installation
+
+Create `database.yaml` by duplicating `config/database.yml.example`.
+Then adjust the config to match your development environment.
+
+Run the following commands.
 
 ```bash
 bundle install

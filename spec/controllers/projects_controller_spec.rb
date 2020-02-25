@@ -28,6 +28,7 @@ RSpec.describe ProjectsController, type: :controller do
 
   describe 'POST #create' do
     let(:organization) { create(:organization) }
+    let(:project) { Project.order(id: :desc).first }
 
     context 'successfully created' do
       it 'returns project json' do
@@ -37,7 +38,7 @@ RSpec.describe ProjectsController, type: :controller do
           expect(response).to be_ok
           expect(json_response).to eq(
             data: {
-              id: '1',
+              id: project.id.to_s,
               type: 'project',
               attributes: {
                 name: 'Test Name',

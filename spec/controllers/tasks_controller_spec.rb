@@ -29,6 +29,7 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'POST #create' do
     let(:project) { create(:project) }
+    let(:task) { Task.order(id: :desc).first }
 
     context 'successfully created' do
       it 'returns task json' do
@@ -39,7 +40,7 @@ RSpec.describe TasksController, type: :controller do
           expect(response).to be_ok
           expect(json_response).to eq(
             data: {
-              id: '1',
+              id: task.id.to_s,
               type: 'task',
               attributes: {
                 name: 'Test Name',
