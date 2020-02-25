@@ -30,7 +30,7 @@ RSpec.describe ProjectsController, type: :controller do
     let(:organization) { create(:organization) }
 
     context 'successfully created' do
-      it 'returns organization json' do
+      it 'returns project json' do
         freeze_time do
           post :create, params: {organization_id: organization.id, name: 'Test Name'}
 
@@ -97,7 +97,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    context 'project does not exists for organization' do
+    context 'project does not exist for organization' do
       let!(:organization1) { create(:organization) }
       let!(:organization2) { create(:organization) }
       let!(:project1) { create(:project, organization: organization1) }
@@ -117,7 +117,7 @@ RSpec.describe ProjectsController, type: :controller do
       let(:project) { create(:project) }
 
       context 'successfully updated' do
-        it 'returns organization json' do
+        it 'returns project json' do
           freeze_time do
             patch :update, params: {
               organization_id: project.organization_id,
@@ -173,7 +173,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    context 'project does not exists for organization' do
+    context 'project does not exist for organization' do
       let!(:organization1) { create(:organization) }
       let!(:organization2) { create(:organization) }
       let!(:project1) { create(:project, organization: organization1) }
@@ -213,7 +213,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    context 'project does not exists for organization' do
+    context 'project does not exist for organization' do
       let!(:organization1) { create(:organization) }
       let!(:organization2) { create(:organization) }
       let!(:project1) { create(:project, organization: organization1) }
