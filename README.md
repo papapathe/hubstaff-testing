@@ -1,5 +1,7 @@
 # Webhooks
 
+![CI Status](https://github.com/ayarotsky/webhooks/actions/workflows/status_checks.yml/badge.svg?branch=master)
+
 The most simple project management tool in the world for which we're going to develop
 a webhook delivery system.
 
