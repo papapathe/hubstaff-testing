@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ControllerTestHelpers
   def json_response
     JSON.parse(response.body, symbolize_names: true)

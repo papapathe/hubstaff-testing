@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ProjectsController, type: :controller do
@@ -8,7 +10,7 @@ RSpec.describe ProjectsController, type: :controller do
     let!(:project2) { create(:project, organization: organization2) }
 
     it 'returns all projects for organization' do
-      get :index, params: {organization_id: organization1.id}
+      get :index, params: { organization_id: organization1.id }
 
       expect(response).to be_ok
       expect(json_response).to eq(
@@ -33,7 +35,7 @@ RSpec.describe ProjectsController, type: :controller do
     context 'successfully created' do
       it 'returns project json' do
         freeze_time do
-          post :create, params: {organization_id: organization.id, name: 'Test Name'}
+          post :create, params: { organization_id: organization.id, name: 'Test Name' }
 
           expect(response).to be_ok
           expect(json_response).to eq(
@@ -54,7 +56,7 @@ RSpec.describe ProjectsController, type: :controller do
 
     context 'error occurred' do
       it 'returns errors' do
-        post :create, params: {organization_id: organization.id}
+        post :create, params: { organization_id: organization.id }
 
         expect(response.status).to eq(422)
         expect(json_response).to eq(
@@ -69,7 +71,7 @@ RSpec.describe ProjectsController, type: :controller do
       let(:project) { create(:project) }
 
       it 'returns project json' do
-        get :show, params: {organization_id: project.organization_id, id: project.id}
+        get :show, params: { organization_id: project.organization_id, id: project.id }
 
         expect(response).to be_ok
         expect(json_response).to eq(
@@ -91,7 +93,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:organization) { create(:organization) }
 
       it 'returns 404' do
-        get :show, params: {organization_id: organization.id, id: 1}
+        get :show, params: { organization_id: organization.id, id: 1 }
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')
@@ -105,7 +107,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:project2) { create(:project, organization: organization2) }
 
       it 'returns 404' do
-        get :show, params: {organization_id: organization1.id, id: project2.id}
+        get :show, params: { organization_id: organization1.id, id: project2.id }
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')
@@ -125,7 +127,7 @@ RSpec.describe ProjectsController, type: :controller do
               id: project.id,
               name: 'Random Test Name'
             }
-  
+
             expect(response).to be_ok
             expect(json_response).to eq(
               data: {
@@ -198,7 +200,7 @@ RSpec.describe ProjectsController, type: :controller do
       let(:project) { create(:project) }
 
       it 'returns 200' do
-        delete :destroy, params: {organization_id: project.organization_id, id: project.id}
+        delete :destroy, params: { organization_id: project.organization_id, id: project.id }
         expect(response).to be_ok
       end
     end
@@ -207,7 +209,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:organization) { create(:organization) }
 
       it 'returns 404' do
-        delete :destroy, params: {organization_id: organization.id, id: 1}
+        delete :destroy, params: { organization_id: organization.id, id: 1 }
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')
@@ -221,7 +223,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:project2) { create(:project, organization: organization2) }
 
       it 'returns 404' do
-        delete :destroy, params: {organization_id: organization1.id, id: project2.id}
+        delete :destroy, params: { organization_id: organization1.id, id: project2.id }
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')

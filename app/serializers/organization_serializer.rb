@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OrganizationSerializer
   include JSONAPI::Serializer
 

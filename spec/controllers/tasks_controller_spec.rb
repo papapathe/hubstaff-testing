@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
@@ -8,7 +10,7 @@ RSpec.describe TasksController, type: :controller do
     let!(:task2) { create(:task, project: project2) }
 
     it 'returns all tasks for project' do
-      get :index, params: {project_id: project1.id}
+      get :index, params: { project_id: project1.id }
 
       expect(response).to be_ok
       expect(json_response).to eq(
@@ -31,11 +33,11 @@ RSpec.describe TasksController, type: :controller do
     let(:project) { create(:project) }
     let(:task) { Task.order(id: :desc).first }
 
-    context 'successfully created' do
+    context 'when successfully created' do
       it 'returns task json' do
         freeze_time do
           post :create,
-               params: {project_id: project.id, name: 'Test Name', description: 'Test Desc'}
+               params: { project_id: project.id, name: 'Test Name', description: 'Test Desc' }
 
           expect(response).to be_ok
           expect(json_response).to eq(
@@ -55,9 +57,9 @@ RSpec.describe TasksController, type: :controller do
       end
     end
 
-    context 'error occurred' do
+    context 'when error occurred' do
       it 'returns errors' do
-        post :create, params: {project_id: project.id}
+        post :create, params: { project_id: project.id }
 
         expect(response.status).to eq(422)
         expect(json_response).to eq(
@@ -71,8 +73,8 @@ RSpec.describe TasksController, type: :controller do
     context 'task exists' do
       let(:task) { create(:task) }
 
-      it 'returns task json' do
-        get :show, params: {project_id: task.project_id, id: task.id}
+      it 'when returns task json' do
+        get :show, params: { project_id: task.project_id, id: task.id }
 
         expect(response).to be_ok
         expect(json_response).to eq(
@@ -91,25 +93,25 @@ RSpec.describe TasksController, type: :controller do
       end
     end
 
-    context 'task does not exist' do
+    context 'when task does not exist' do
       let!(:project) { create(:project) }
 
       it 'returns 404' do
-        get :show, params: {project_id: project.id, id: 1}
+        get :show, params: { project_id: project.id, id: 1 }
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')
       end
     end
 
-    context 'task does not exist for project' do
+    context 'when task does not exist for project' do
       let!(:project1) { create(:project) }
       let!(:project2) { create(:project) }
       let!(:task1) { create(:task, project: project1) }
       let!(:task2) { create(:task, project: project2) }
 
       it 'returns 404' do
-        get :show, params: {project_id: project1.id, id: project2.id}
+        get :show, params: { project_id: project1.id, id: project2.id }
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')
@@ -121,7 +123,7 @@ RSpec.describe TasksController, type: :controller do
     context 'task exists' do
       let(:task) { create(:task) }
 
-      context 'successfully updated' do
+      context 'when successfully updated' do
         it 'returns task json' do
           freeze_time do
             patch :update, params: {
@@ -129,7 +131,7 @@ RSpec.describe TasksController, type: :controller do
               id: task.id,
               name: 'Random Test Name'
             }
-  
+
             expect(response).to be_ok
             expect(json_response).to eq(
               data: {
@@ -148,7 +150,7 @@ RSpec.describe TasksController, type: :controller do
         end
       end
 
-      context 'error occurred' do
+      context 'when error occurred' do
         it 'returns errors' do
           patch :update, params: {
             project_id: task.project_id,
@@ -164,7 +166,7 @@ RSpec.describe TasksController, type: :controller do
       end
     end
 
-    context 'task does not exist' do
+    context 'when task does not exist' do
       let!(:project) { create(:project) }
 
       it 'returns 404' do
@@ -179,7 +181,7 @@ RSpec.describe TasksController, type: :controller do
       end
     end
 
-    context 'task does not exist for organization' do
+    context 'when task does not exist for organization' do
       let!(:project1) { create(:project) }
       let!(:project2) { create(:project) }
       let!(:task1) { create(:task, project: project1) }
@@ -199,34 +201,34 @@ RSpec.describe TasksController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    context 'task exists' do
+    context 'when task exists' do
       let(:task) { create(:task) }
 
       it 'returns 200' do
-        delete :destroy, params: {project_id: task.project_id, id: task.id}
+        delete :destroy, params: { project_id: task.project_id, id: task.id }
         expect(response).to be_ok
       end
     end
 
-    context 'task does not exist' do
+    context 'when task does not exist' do
       let!(:project) { create(:project) }
 
       it 'returns 404' do
-        delete :destroy, params: {project_id: project.id, id: 1}
+        delete :destroy, params: { project_id: project.id, id: 1 }
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')
       end
     end
 
-    context 'task does not exist for project' do
+    context 'when task does not exist for project' do
       let!(:project1) { create(:project) }
       let!(:project2) { create(:project) }
       let!(:task1) { create(:task, project: project1) }
       let!(:task2) { create(:task, project: project2) }
 
       it 'returns 404' do
-        delete :destroy, params: {project_id: project1.id, id: task2.id}
+        delete :destroy, params: { project_id: project1.id, id: task2.id }
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')

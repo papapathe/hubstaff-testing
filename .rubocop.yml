@@ -1,0 +1,43 @@
+require:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+  - rubocop-rails
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.5
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: '[]'
+
+Style/DoubleNegation:
+  Enabled: no
+
+Style/Documentation:
+  Enabled: yes
+
+Metrics/AbcSize:
+  Enabled: yes
+
+Metrics/MethodLength:
+  Enabled: yes
+
+Metrics/CyclomaticComplexity:
+  Enabled: yes
+
+Metrics/PerceivedComplexity:
+  Enabled: yes
+
+Metrics/ClassLength:
+  Enabled: yes
+
+Naming/AccessorMethodName:
+  Enabled: yes
+
+Layout/LineLength:
+  Max: 100
+
+RSpec/MultipleExpectations:
+  Max: 3

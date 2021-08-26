@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TasksController < ApplicationController
   before_action :find_project
   before_action :find_task, only: %i[show update destroy]
@@ -12,7 +14,7 @@ class TasksController < ApplicationController
     if @task.save
       render json: TaskSerializer.new(@task).serializable_hash
     else
-      render json: {errors: @task.errors.full_messages}, status: 422
+      render json: { errors: @task.errors.full_messages }, status: 422
     end
   end
 
@@ -24,7 +26,7 @@ class TasksController < ApplicationController
     if @task.update(task_params)
       render json: TaskSerializer.new(@task).serializable_hash
     else
-      render json: {errors: @task.errors.full_messages}, status: 422
+      render json: { errors: @task.errors.full_messages }, status: 422
     end
   end
 
