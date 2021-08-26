@@ -1,5 +1,5 @@
 class OrganizationSerializer
-  include FastJsonapi::ObjectSerializer
+  include JSONAPI::Serializer
 
   attributes :name, :created_at
 end

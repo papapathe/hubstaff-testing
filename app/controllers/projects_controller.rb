@@ -3,26 +3,26 @@ class ProjectsController < ApplicationController
   before_action :find_project, only: %i[show update destroy]
 
   def index
-    render json: ProjectSerializer.new(@organization.projects).serialized_json
+    render json: ProjectSerializer.new(@organization.projects).serializable_hash
   end
 
   def create
     @project = @organization.projects.build(project_params)
 
     if @project.save
-      render json: ProjectSerializer.new(@project).serialized_json
+      render json: ProjectSerializer.new(@project).serializable_hash
     else
       render json: {errors: @project.errors.full_messages}, status: 422
     end
   end
 
   def show
-    render json: ProjectSerializer.new(@project).serialized_json
+    render json: ProjectSerializer.new(@project).serializable_hash
   end
 
   def update
     if @project.update(project_params)
-      render json: ProjectSerializer.new(@project).serialized_json
+      render json: ProjectSerializer.new(@project).serializable_hash
     else
       render json: {errors: @project.errors.full_messages}, status: 422
     end
