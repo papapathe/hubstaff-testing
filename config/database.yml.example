@@ -1,7 +1,8 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 10 } %>
+  host: localhost
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 20 } %>
 
 development:
   <<: *default
@@ -13,3 +14,5 @@ development:
 test:
   <<: *default
   database: webhooks_test
+  username: <%= ENV["DB_USER"] %>
+  password: <%= ENV["DB_PASSWORD"] %>

@@ -8,12 +8,8 @@ RSpec.describe ProjectsController, type: :controller do
     let!(:organization2) { create(:organization) }
     let!(:project1) { create(:project, organization: organization1) }
     let!(:project2) { create(:project, organization: organization2) }
-
-    it 'returns all projects for organization' do
-      get :index, params: { organization_id: organization1.id }
-
-      expect(response).to be_ok
-      expect(json_response).to eq(
+    let(:expected_response) do
+      {
         data: [{
           id: project1.id.to_s,
           type: 'project',
@@ -24,57 +20,62 @@ RSpec.describe ProjectsController, type: :controller do
             updated_at: project1.updated_at.as_json
           }
         }]
-      )
+      }
+    end
+
+    it 'returns all projects for organization' do
+      get :index, params: { organization_id: organization1.id }
+
+      expect(response).to be_ok
+      expect(json_response).to eq(expected_response)
     end
   end
 
   describe 'POST #create' do
     let(:organization) { create(:organization) }
     let(:project) { Project.order(id: :desc).first }
+    let(:expected_response) do
+      {
+        data: {
+          id: project.id.to_s,
+          type: 'project',
+          attributes: {
+            name: 'Test Name',
+            organization_id: organization.id,
+            created_at: Time.zone.now.as_json,
+            updated_at: Time.zone.now.as_json
+          }
+        }
+      }
+    end
 
-    context 'successfully created' do
+    context 'when successfully created' do
       it 'returns project json' do
         freeze_time do
           post :create, params: { organization_id: organization.id, name: 'Test Name' }
 
           expect(response).to be_ok
-          expect(json_response).to eq(
-            data: {
-              id: project.id.to_s,
-              type: 'project',
-              attributes: {
-                name: 'Test Name',
-                organization_id: organization.id,
-                created_at: Time.zone.now.as_json,
-                updated_at: Time.zone.now.as_json
-              }
-            }
-          )
+          expect(json_response).to eq(expected_response)
         end
       end
     end
 
-    context 'error occurred' do
+    context 'when error occurred' do
       it 'returns errors' do
         post :create, params: { organization_id: organization.id }
 
         expect(response.status).to eq(422)
-        expect(json_response).to eq(
-          errors: ["Name can't be blank"]
-        )
+        expect(json_response).to eq(errors: ["Name can't be blank"])
       end
     end
   end
 
   describe 'GET #show' do
-    context 'project exists' do
+    context 'when project exists' do
       let(:project) { create(:project) }
-
-      it 'returns project json' do
-        get :show, params: { organization_id: project.organization_id, id: project.id }
-
-        expect(response).to be_ok
-        expect(json_response).to eq(
+      let(:params) { { organization_id: project.organization_id, id: project.id } }
+      let(:expected_response) do
+        {
           data: {
             id: project.id.to_s,
             type: 'project',
@@ -85,11 +86,18 @@ RSpec.describe ProjectsController, type: :controller do
               updated_at: project.updated_at.as_json
             }
           }
-        )
+        }
+      end
+
+      it 'returns project json' do
+        get :show, params: params
+
+        expect(response).to be_ok
+        expect(json_response).to eq(expected_response)
       end
     end
 
-    context 'project does not exist' do
+    context 'when project does not exist' do
       let!(:organization) { create(:organization) }
 
       it 'returns 404' do
@@ -100,7 +108,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    context 'project does not exist for organization' do
+    context 'when project does not exist for organization' do
       let!(:organization1) { create(:organization) }
       let!(:organization2) { create(:organization) }
       let!(:project1) { create(:project, organization: organization1) }
@@ -116,36 +124,43 @@ RSpec.describe ProjectsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    context 'project exists' do
+    context 'when project exists' do
       let(:project) { create(:project) }
 
-      context 'successfully updated' do
+      context 'when successfully updated' do
+        let(:params) do
+          {
+            organization_id: project.organization_id,
+            id: project.id,
+            name: 'Random Test Name'
+          }
+        end
+        let(:expected_response) do
+          {
+            data: {
+              id: project.id.to_s,
+              type: 'project',
+              attributes: {
+                name: 'Random Test Name',
+                organization_id: project.organization_id,
+                created_at: project.created_at.as_json,
+                updated_at: Time.zone.now.as_json
+              }
+            }
+          }
+        end
+
         it 'returns project json' do
           freeze_time do
-            patch :update, params: {
-              organization_id: project.organization_id,
-              id: project.id,
-              name: 'Random Test Name'
-            }
+            patch :update, params: params
 
             expect(response).to be_ok
-            expect(json_response).to eq(
-              data: {
-                id: project.id.to_s,
-                type: 'project',
-                attributes: {
-                  name: 'Random Test Name',
-                  organization_id: project.organization_id,
-                  created_at: project.created_at.as_json,
-                  updated_at: Time.zone.now.as_json
-                }
-              }
-            )
+            expect(json_response).to eq(expected_response)
           end
         end
       end
 
-      context 'error occurred' do
+      context 'when error occurred' do
         it 'returns errors' do
           patch :update, params: {
             organization_id: project.organization_id,
@@ -154,14 +169,12 @@ RSpec.describe ProjectsController, type: :controller do
           }
 
           expect(response.status).to eq(422)
-          expect(json_response).to eq(
-            errors: ["Name can't be blank"]
-          )
+          expect(json_response).to eq(errors: ["Name can't be blank"])
         end
       end
     end
 
-    context 'project does not exist' do
+    context 'when project does not exist' do
       let!(:organization) { create(:organization) }
 
       it 'returns 404' do
@@ -176,7 +189,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    context 'project does not exist for organization' do
+    context 'when project does not exist for organization' do
       let!(:organization1) { create(:organization) }
       let!(:organization2) { create(:organization) }
       let!(:project1) { create(:project, organization: organization1) }
@@ -196,7 +209,7 @@ RSpec.describe ProjectsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    context 'project exists' do
+    context 'when project exists' do
       let(:project) { create(:project) }
 
       it 'returns 200' do
@@ -205,7 +218,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    context 'project does not exist' do
+    context 'when project does not exist' do
       let!(:organization) { create(:organization) }
 
       it 'returns 404' do
@@ -216,7 +229,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    context 'project does not exist for organization' do
+    context 'when project does not exist for organization' do
       let!(:organization1) { create(:organization) }
       let!(:organization2) { create(:organization) }
       let!(:project1) { create(:project, organization: organization1) }

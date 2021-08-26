@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Exposes API for interacting with Organizations.
 class OrganizationsController < ApplicationController
   def show
     @organization = Organization.find(params[:id])

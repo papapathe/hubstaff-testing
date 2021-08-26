@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Exposes API for interacting with Projects.
 class ProjectsController < ApplicationController
   before_action :find_organization
   before_action :find_project, only: %i[show update destroy]
@@ -14,7 +15,7 @@ class ProjectsController < ApplicationController
     if @project.save
       render json: ProjectSerializer.new(@project).serializable_hash
     else
-      render json: { errors: @project.errors.full_messages }, status: 422
+      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -26,7 +27,7 @@ class ProjectsController < ApplicationController
     if @project.update(project_params)
       render json: ProjectSerializer.new(@project).serializable_hash
     else
-      render json: { errors: @project.errors.full_messages }, status: 422
+      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

@@ -6,7 +6,7 @@ require:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.7
 
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
@@ -17,6 +17,10 @@ Style/DoubleNegation:
 
 Style/Documentation:
   Enabled: yes
+  Exclude:
+    - 'db/**/*.rb'
+    - 'config/**/*.rb'
+    - 'spec/**/*.rb'
 
 Metrics/AbcSize:
   Enabled: yes
@@ -37,7 +41,20 @@ Naming/AccessorMethodName:
   Enabled: yes
 
 Layout/LineLength:
-  Max: 100
+  Max: 120
 
 RSpec/MultipleExpectations:
   Max: 3
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+RSpec/NestedGroups:
+  Max: 5
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/LetSetup:
+  Enabled: no

@@ -8,12 +8,8 @@ RSpec.describe TasksController, type: :controller do
     let!(:project2) { create(:project) }
     let!(:task1) { create(:task, project: project1) }
     let!(:task2) { create(:task, project: project2) }
-
-    it 'returns all tasks for project' do
-      get :index, params: { project_id: project1.id }
-
-      expect(response).to be_ok
-      expect(json_response).to eq(
+    let(:expected_response) do
+      {
         data: [{
           id: task1.id.to_s,
           type: 'task',
@@ -25,7 +21,14 @@ RSpec.describe TasksController, type: :controller do
             updated_at: task1.updated_at.as_json
           }
         }]
-      )
+      }
+    end
+
+    it 'returns all tasks for project' do
+      get :index, params: { project_id: project1.id }
+
+      expect(response).to be_ok
+      expect(json_response).to eq(expected_response)
     end
   end
 
@@ -34,25 +37,31 @@ RSpec.describe TasksController, type: :controller do
     let(:task) { Task.order(id: :desc).first }
 
     context 'when successfully created' do
+      let(:params) do
+        { project_id: project.id, name: 'Test Name', description: 'Test Desc' }
+      end
+      let(:expected_response) do
+        {
+          data: {
+            id: task.id.to_s,
+            type: 'task',
+            attributes: {
+              name: 'Test Name',
+              description: 'Test Desc',
+              project_id: project.id,
+              created_at: Time.zone.now.as_json,
+              updated_at: Time.zone.now.as_json
+            }
+          }
+        }
+      end
+
       it 'returns task json' do
         freeze_time do
-          post :create,
-               params: { project_id: project.id, name: 'Test Name', description: 'Test Desc' }
+          post :create, params: params
 
           expect(response).to be_ok
-          expect(json_response).to eq(
-            data: {
-              id: task.id.to_s,
-              type: 'task',
-              attributes: {
-                name: 'Test Name',
-                description: 'Test Desc',
-                project_id: project.id,
-                created_at: Time.zone.now.as_json,
-                updated_at: Time.zone.now.as_json
-              }
-            }
-          )
+          expect(json_response).to eq(expected_response)
         end
       end
     end
@@ -70,14 +79,10 @@ RSpec.describe TasksController, type: :controller do
   end
 
   describe 'GET #show' do
-    context 'task exists' do
+    context 'when task exists' do
       let(:task) { create(:task) }
-
-      it 'when returns task json' do
-        get :show, params: { project_id: task.project_id, id: task.id }
-
-        expect(response).to be_ok
-        expect(json_response).to eq(
+      let(:expected_response) do
+        {
           data: {
             id: task.id.to_s,
             type: 'task',
@@ -89,7 +94,14 @@ RSpec.describe TasksController, type: :controller do
               updated_at: task.updated_at.as_json
             }
           }
-        )
+        }
+      end
+
+      it 'when returns task json' do
+        get :show, params: { project_id: task.project_id, id: task.id }
+
+        expect(response).to be_ok
+        expect(json_response).to eq(expected_response)
       end
     end
 
@@ -120,61 +132,73 @@ RSpec.describe TasksController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    context 'task exists' do
+    context 'when task exists' do
       let(:task) { create(:task) }
 
       context 'when successfully updated' do
+        let(:params) do
+          {
+            project_id: task.project_id,
+            id: task.id,
+            name: 'Random Test Name'
+          }
+        end
+        let(:expected_response) do
+          {
+            data: {
+              id: task.id.to_s,
+              type: 'task',
+              attributes: {
+                name: 'Random Test Name',
+                description: task.description,
+                project_id: task.project_id,
+                created_at: task.created_at.as_json,
+                updated_at: Time.zone.now.as_json
+              }
+            }
+          }
+        end
+
         it 'returns task json' do
           freeze_time do
-            patch :update, params: {
-              project_id: task.project_id,
-              id: task.id,
-              name: 'Random Test Name'
-            }
+            patch :update, params: params
 
             expect(response).to be_ok
-            expect(json_response).to eq(
-              data: {
-                id: task.id.to_s,
-                type: 'task',
-                attributes: {
-                  name: 'Random Test Name',
-                  description: task.description,
-                  project_id: task.project_id,
-                  created_at: task.created_at.as_json,
-                  updated_at: Time.zone.now.as_json
-                }
-              }
-            )
+            expect(json_response).to eq(expected_response)
           end
         end
       end
 
       context 'when error occurred' do
-        it 'returns errors' do
-          patch :update, params: {
+        let(:params) do
+          {
             project_id: task.project_id,
             id: task.id,
             name: ''
           }
+        end
+
+        it 'returns errors' do
+          patch :update, params: params
 
           expect(response.status).to eq(422)
-          expect(json_response).to eq(
-            errors: ["Name can't be blank"]
-          )
+          expect(json_response).to eq(errors: ["Name can't be blank"])
         end
       end
     end
 
     context 'when task does not exist' do
       let!(:project) { create(:project) }
-
-      it 'returns 404' do
-        patch :update, params: {
+      let(:params) do
+        {
           project_id: project.id,
           id: 1,
           name: 'Test'
         }
+      end
+
+      it 'returns 404' do
+        patch :update, params: params
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')
@@ -186,13 +210,16 @@ RSpec.describe TasksController, type: :controller do
       let!(:project2) { create(:project) }
       let!(:task1) { create(:task, project: project1) }
       let!(:task2) { create(:task, project: project2) }
-
-      it 'returns 404' do
-        patch :update, params: {
+      let(:params) do
+        {
           project_id: project1.id,
           id: task2.id,
           name: 'Test'
         }
+      end
+
+      it 'returns 404' do
+        patch :update, params: params
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')

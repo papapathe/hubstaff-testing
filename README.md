@@ -8,7 +8,7 @@ It doesn't even have authorization 😱.
 ## Dependencies
 
 * ruby-2.7.4
-* postgres-9.6+
+* postgres-11+
 
 ## Installation
 
