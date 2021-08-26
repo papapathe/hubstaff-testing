@@ -7,7 +7,7 @@ It doesn't even have authorization 😱.
 
 ## Dependencies
 
-* ruby-2.6.3
+* ruby-2.7.4
 * postgres-9.6+
 
 ## Installation
