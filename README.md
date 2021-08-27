@@ -42,7 +42,7 @@ bundle exec rspec
 - Write documentation for all new methods and models.
 - You can use any gem to solve any part of the assignment. Provide a detailed comment
   explaining why you chose a certain gem.
-- **IMPORTANT:** Open a PR with your solution in your fork. Do not open a PR in the original repo.
+- **IMPORTANT:** Open a PR with your solution in your repo. Do not open a PR in the original repo.
 - Assign `ayarotsky` as a reviewer.
 
 You're good to go. Happy coding 🤘!
