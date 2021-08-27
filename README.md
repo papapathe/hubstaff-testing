@@ -33,7 +33,8 @@ bundle exec rspec
 
 ## Assignment
 
-- Fork the repo.
+- Clone the challenge repo and upload it as a new private repo.
+- In your private repo, please check out a separate branch using your own name. When you're finished, you'll submit a pull request from this branch back to main.
 - Add token-based authentication to the existing API.
 - Cover the changes with tests.
 - Ensure that the new code follows the existing Rubocop rules.
