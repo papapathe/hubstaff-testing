@@ -10,7 +10,7 @@ It doesn't even have authorization and UI 😱.
 
 ## Dependencies
 
-- ruby-2.7.4
+- ruby-2.7.6
 - postgres-11+
 
 ## Installation
