@@ -5,29 +5,58 @@ require 'rails_helper'
 RSpec.describe ProjectsController, type: :controller do
   describe 'GET #index' do
     let!(:organization1) { create(:organization) }
-    let!(:organization2) { create(:organization) }
-    let!(:project1) { create(:project, organization: organization1) }
-    let!(:project2) { create(:project, organization: organization2) }
-    let(:expected_response) do
-      {
-        data: [{
-          id: project1.id.to_s,
-          type: 'project',
-          attributes: {
-            name: project1.name,
-            organization_id: organization1.id,
-            created_at: project1.created_at.as_json,
-            updated_at: project1.updated_at.as_json
-          }
-        }]
-      }
+    let(:run_request) { get :index, params: { organization_id: organization1.id } }
+
+    describe 'when user is authenticated' do
+      include_context 'when user is logged in'
+
+      let!(:project1) { create(:project, organization: organization1) }
+      let!(:project2) { create(:project, organization: create(:organization)) }
+      let(:expected_response) do
+        {
+          data: [{
+            id: project1.id.to_s,
+            type: 'project',
+            attributes: {
+              name: project1.name,
+              organization_id: organization1.id,
+              created_at: project1.created_at.as_json,
+              updated_at: project1.updated_at.as_json
+            }
+          }]
+        }
+      end
+
+      it 'returns all projects for organization' do
+        run_request
+        expect(response).to be_ok
+        expect(json_response).to eq(expected_response)
+      end
     end
 
-    it 'returns all projects for organization' do
-      get :index, params: { organization_id: organization1.id }
+    context 'when token is not supplied in headers' do
+      before do
+        run_request
+      end
 
-      expect(response).to be_ok
-      expect(json_response).to eq(expected_response)
+      it 'returns not authorized' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    [nil, '', ' '].each do |value|
+      context 'when token in headers is nil' do
+        let(:token) { value }
+
+        before do
+          request.headers['Authorization'] = nil
+          run_request
+        end
+
+        it 'returns not authorized' do
+          expect(response).to have_http_status(:unauthorized)
+        end
+      end
     end
   end
 
@@ -49,28 +78,32 @@ RSpec.describe ProjectsController, type: :controller do
       }
     end
 
-    context 'when successfully created' do
-      it 'returns project json' do
-        freeze_time do
-          post :create, params: { organization_id: organization.id, name: 'Test Name' }
+    describe 'when user is authenticated' do
+      include_context 'when user is logged in'
+      context 'when successfully created' do
+        it 'returns project json' do
+          freeze_time do
+            post :create, params: { organization_id: organization.id, name: 'Test Name' }
 
-          expect(response).to be_ok
-          expect(json_response).to eq(expected_response)
+            expect(response).to be_ok
+            expect(json_response).to eq(expected_response)
+          end
         end
       end
-    end
 
-    context 'when error occurred' do
-      it 'returns errors' do
-        post :create, params: { organization_id: organization.id }
+      context 'when error occurred' do
+        it 'returns errors' do
+          post :create, params: { organization_id: organization.id }
 
-        expect(response.status).to eq(422)
-        expect(json_response).to eq(errors: ["Name can't be blank"])
+          expect(response.status).to eq(422)
+          expect(json_response).to eq(errors: ["Name can't be blank"])
+        end
       end
     end
   end
 
   describe 'GET #show' do
+    include_context 'when user is logged in'
     context 'when project exists' do
       let(:project) { create(:project) }
       let(:params) { { organization_id: project.organization_id, id: project.id } }
@@ -124,6 +157,7 @@ RSpec.describe ProjectsController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    include_context 'when user is logged in'
     context 'when project exists' do
       let(:project) { create(:project) }
 
@@ -209,6 +243,7 @@ RSpec.describe ProjectsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    include_context 'when user is logged in'
     context 'when project exists' do
       let(:project) { create(:project) }
 
