@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+# Serialize the user as response to login request
+class UserSessionSerializer
+  include JSONAPI::Serializer
+
+  attributes :name
+
+  attribute :token do |user|
+    jwt = JwtService.new.encode(
+      user: user,
+      algorithm: 'HS256',
+      secret: 'mysecret'
+    )
+    MessageEncryptorService.new(jwt).encrypt
+  end
+end
