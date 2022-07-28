@@ -7,6 +7,8 @@ class SessionService
   # @param params [ActionController::Parameters] user input from controller
   # @raise ApiError
   def create!(params)
+    raise ApiError, MESSAGE unless params.is_a?(ActionController::Parameters)
+
     user = User.find_by name: params[:name]
 
     raise ApiError, MESSAGE if user.blank?
