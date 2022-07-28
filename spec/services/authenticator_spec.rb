@@ -11,13 +11,13 @@ RSpec.describe Authenticator do
     context 'when token is nil' do
       let(:token) { nil }
 
-      it { expect { result }.to raise_error(ArgumentError) }
+      it { expect { result }.to raise_error(ApiError) }
     end
 
     context 'when token is empty string' do
       let(:token) { '' }
 
-      it { expect { result }.to raise_error(ArgumentError) }
+      it { expect { result }.to raise_error(ApiError) }
     end
 
     context 'when token is valid' do

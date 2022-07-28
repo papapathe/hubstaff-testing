@@ -10,7 +10,7 @@ class Authenticator
   #
   # @raise ArgumentError, ActiveRecord::RecordNotFound
   def authenticate!(token, encryptor: MessageEncryptorService, jwt_svc: JwtService.new)
-    raise ArgumentError if token.blank?
+    raise ApiError.new 'Authorization header is not present', 401 if token.blank?
 
     jwt_string = encryptor.new(token).decrypt
 
