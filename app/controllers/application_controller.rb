@@ -3,7 +3,7 @@
 # Base class for all controllers
 class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
-  attr_reader :current_user
+  rescue_from ApiError, with: :api_exception
 
   before_action :authenticate_with_token!
 
@@ -15,5 +15,9 @@ class ApplicationController < ActionController::Base
 
   def not_found
     render json: { error: 'Not Found' }, status: :not_found
+  end
+
+  def api_exception(error)
+    render json: error.to_json, status: error.status
   end
 end
