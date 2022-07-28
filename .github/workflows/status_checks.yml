@@ -42,6 +42,7 @@ jobs:
           RAILS_ENV: test
           DB_USER: postgres
           DB_PASSWORD: postgres
+          JWT_SECRET: ajwtsecret
         run: |
           cp config/database.yml.example config/database.yml
           bundle exec rails db:setup

@@ -1,0 +1,6 @@
+development:
+  secret: <%= ENV['JWT_SECRET'] %>
+  algorithm: 'HS256'
+test:
+  secret:  <%= ENV['JWT_SECRET'] %>
+  algorithm: 'HS256'

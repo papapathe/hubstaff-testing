@@ -19,6 +19,17 @@ rescue ActiveRecord::PendingMigrationError => e
   puts e.to_s.strip
   exit 1
 end
+
+RSpec.shared_context 'when user is logged in' do
+  let(:user) { create(:user) }
+  let(:jwt) { JwtService.new.encode(user: user, algorithm: JwtConfig.algorithm, secret: JwtConfig.secret) }
+  let(:token) { MessageEncryptorService.new(jwt).encrypt }
+
+  before do
+    request.headers['Authorization'] = token
+  end
+end
+
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
   config.infer_spec_type_from_file_location!

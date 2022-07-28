@@ -6,6 +6,36 @@ The most simple project management tool in the world.
 
 It doesn't even have authorization and UI 😱.
 
+```mermaid
+sequenceDiagram
+    Client->>+ApplicationController: get(/projects/a_uuid) ?
+    alt unless header_present?()
+        ApplicationController->>+Client: 401 status + error detail
+    end
+    ApplicationController->>+TokenVerifierService: verify!(token)
+    alt unless token_verified?
+        ApplicationController->>+Client: 401 status + error detail
+    end
+    TokenVerifierService-->ApplicationController: return verified_token
+    ApplicationController->>+TokenAuthenticatorService: authenticate(token)
+    alt unless jwt_decoded?
+        ApplicationController->>+Client: 401 status + error detail
+    end
+    TokenAuthenticatorService-->ApplicationController: return decoded_jwt
+    TokenAuthenticatorService->>UserModel: find(decoded_jwt[user_id])
+    alt unless user_exist?
+        ApplicationController->>+Client: 401 status + error detail
+    end
+    UserModel-->TokenVerifierService: user_instance
+
+    alt unless user_instance.user_secret === decoded_jwt[user_secret]
+        ApplicationController->>Client: 401 status + error detail
+
+    end
+    TokenVerifierService-->ApplicationController: current_user
+    ApplicationController->>Client: 200 status + jsonapi response
+```
+
 ![](diagram.png)
 
 ## Dependencies

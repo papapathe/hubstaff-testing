@@ -35,5 +35,6 @@ module Webhooks
     config.generators.system_tests = nil
 
     config.active_record.legacy_connection_handling = false
+    config_for :jwt
   end
 end
