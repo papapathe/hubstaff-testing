@@ -1,0 +1,6 @@
+development:
+  secret: 'notasecretjwt'
+  algorithm: 'HS256'
+test:
+  secret: 'notasecretjwt'
+  algorithm: 'HS256'

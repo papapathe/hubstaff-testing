@@ -24,8 +24,8 @@ RSpec.describe Authenticator do
       let(:jwt) do
         JWT.encode(
           { user_id: user.id, last_login_secret: user.last_login_secret },
-          'secret',
-          'HS256'
+          JwtConfig.secret,
+          JwtConfig.algorithm
         )
       end
       let(:token) { MessageEncryptorService.new(jwt).encrypt }

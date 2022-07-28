@@ -14,7 +14,7 @@ class Authenticator
 
     jwt_string = encryptor.new(token).decrypt
 
-    data, = jwt_svc.decode jwt_string, 'secret', { algorithm: 'HS256' }
+    data, = jwt_svc.decode jwt_string, JwtConfig.secret, { algorithm: JwtConfig.algorithm }
 
     user = User.find(data['user_id'])
 

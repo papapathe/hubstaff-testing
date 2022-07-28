@@ -9,8 +9,8 @@ class UserSessionSerializer
   attribute :token do |user|
     jwt = JwtService.new.encode(
       user: user,
-      algorithm: 'HS256',
-      secret: 'mysecret'
+      algorithm: JwtConfig.algorithm,
+      secret: JwtConfig.secret
     )
     MessageEncryptorService.new(jwt).encrypt
   end
