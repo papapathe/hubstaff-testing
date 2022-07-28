@@ -4,8 +4,10 @@
 class UserSessionSerializer
   include JSONAPI::Serializer
 
+  # The unique name of the user
   attributes :name
 
+  # The token that will be used to authenticate api requests
   attribute :token do |user|
     jwt = JwtService.new.encode(
       user: user,

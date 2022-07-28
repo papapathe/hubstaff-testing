@@ -15,6 +15,10 @@ class ApiError < ::StandardError
     @status = status
   end
 
+  # provides a json representation of the error when exception is rescued
+  # in controllers.
+  #
+  # @return [Hash] the error message as a hash
   def to_json(*)
     {
       error: @message
